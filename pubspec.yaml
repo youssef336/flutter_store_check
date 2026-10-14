@@ -1,0 +1,29 @@
+name: flutter_store_check
+description: >-
+  A pre-submission reviewer for Flutter apps: catches Google Play and App Store
+  rejection causes (privacy manifest, permissions, IAP, UGC, signing, 16 KB)
+  before you upload.
+version: 0.1.0
+repository: https://github.com/youssef336/flutter_store_check
+issue_tracker: https://github.com/youssef336/flutter_store_check/issues
+topics:
+  - app-store
+  - google-play
+  - ci
+  - flutter
+  - release
+
+environment:
+  sdk: ^3.9.0
+
+executables:
+  store_check: store_check
+  flutter_store_check: flutter_store_check
+
+dependencies:
+  args: ^2.5.0
+  yaml: ^3.1.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

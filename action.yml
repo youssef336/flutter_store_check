@@ -1,0 +1,67 @@
+name: Flutter Store Check
+description: >-
+  Fail the build on Google Play and App Store rejection causes in a Flutter
+  project, before you upload.
+author: youssef336
+branding:
+  icon: check-square
+  color: green
+
+inputs:
+  working-directory:
+    description: Flutter project root (the folder with pubspec.yaml).
+    required: false
+    default: .
+  args:
+    description: >-
+      Extra store_check arguments, e.g. "--strict" or
+      "--aab build/app/outputs/bundle/release/app-release.aab".
+    required: false
+    default: ''
+  html:
+    description: Where to write the HTML report (upload it as an artifact). Empty to skip.
+    required: false
+    default: store_check_report.html
+  version:
+    description: >-
+      Git ref of flutter_store_check to run. Empty uses the copy of the action
+      itself (the ref in `uses:`).
+    required: false
+    default: ''
+  sdk:
+    description: Dart SDK channel or version for dart-lang/setup-dart.
+    required: false
+    default: stable
+
+runs:
+  using: composite
+  steps:
+    - uses: dart-lang/setup-dart@v1
+      with:
+        sdk: ${{ inputs.sdk }}
+
+    - name: Activate store_check
+      shell: bash
+      env:
+        TOOL_VERSION: ${{ inputs.version }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        if [ -n "$TOOL_VERSION" ]; then
+          dart pub global activate --source git \
+            https://github.com/youssef336/flutter_store_check --git-ref "$TOOL_VERSION"
+        else
+          dart pub global activate --source path "$ACTION_PATH"
+        fi
+
+    - name: store_check
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        EXTRA_ARGS: ${{ inputs.args }}
+        HTML: ${{ inputs.html }}
+      run: |
+        args=(check --format github)
+        if [ -n "$HTML" ]; then args+=(--html "$HTML"); fi
+        # shellcheck disable=SC2206
+        args+=($EXTRA_ARGS)
+        dart pub global run flutter_store_check:store_check "${args[@]}"
