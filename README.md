@@ -1,5 +1,7 @@
 [العربية](README.ar.md)
 
+<p align="center"><img src="https://raw.githubusercontent.com/youssef336/flutter_store_check/main/screenshots/banner.png" alt="flutter_store_check banner" width="100%"></p>
+
 <h1 align="center">Flutter Store Check</h1>
 
 <p align="center">
